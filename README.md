@@ -80,6 +80,7 @@
    - `--cognito-user-pool-id`: 既存の Cognito User Pool ID（指定しない場合は新規作成）
    - `--cognito-user-pool-client-id`: 既存の Cognito User Pool Client ID（指定しない場合は新規作成）
    - `--cognito-domain-prefix`: Cognito ドメインのプレフィックス（指定しない場合は自動生成）
+   - `--vpc-id`: 既存の VPC ID（指定すると新しい VPC を作成せず、既存の VPC を使用）
    - `--mcp-admin`: MCP ランタイム Lambda 関数に管理者権限を付与するかどうか（true/false）
    - `--repo-url`: デプロイするリポジトリの URL
    - `--branch`: デプロイするブランチ名
@@ -145,6 +146,7 @@ CDK デプロイ時に以下のパラメータをカスタマイズできます:
 |                      | cognitoUserPoolClientId  | 既存の Cognito User Pool Client ID                                                           | 新規作成                                  |
 |                      | cognitoDomainPrefix      | Cognito ドメインのプレフィックス                                                             | 自動生成                                  |
 |                      | cognitoSelfSignUpEnabled | Cognito User Pool のセルフサインアップを有効にするかどうか                                   | true (有効)                               |
+| **VPC 設定**        | vpcId                    | 既存の VPC ID（指定すると新しい VPC を作成せず、既存の VPC を使用）                       | 新規作成                                  |
 | **マイグレーション** | autoMigrate              | デプロイ時に自動的にマイグレーションを実行するかどうか                                       | true (自動実行する)                       |
 | **MCP 機能**         | mcpAdmin                 | MCP ランタイム Lambda 関数に管理者権限を付与するかどうか ([詳細](./docs/ja/mcp-features.md)) | false (無効)                              |
 

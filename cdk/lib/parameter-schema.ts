@@ -6,6 +6,12 @@ import { parameters as userParameters } from "./parameter";
  * ここにはバリデーションルールとデフォルト値を設定します。
  */
 const parameterSchema = z.object({
+  // VPC関連のパラメータ
+  vpcId: z
+    .string()
+    .optional()
+    .describe("既存のVPC IDを指定すると、新しいVPCを作成せずに既存のVPCを使用します"),
+
   // WAF IPアドレス制限のパラメータ
   allowedIpV4AddressRanges: z
     .array(z.string())
@@ -165,6 +171,12 @@ export function extractContextParameters(app: any): Record<string, any> {
   const mcpAdmin = app.node.tryGetContext("rapid.mcpAdmin");
   if (mcpAdmin !== undefined) {
     params.mcpAdmin = mcpAdmin === "true" || mcpAdmin === true;
+  }
+
+  // 既存VPC ID設定の取得
+  const vpcId = app.node.tryGetContext("rapid.vpcId");
+  if (vpcId !== undefined) {
+    params.vpcId = vpcId;
   }
 
   return params;

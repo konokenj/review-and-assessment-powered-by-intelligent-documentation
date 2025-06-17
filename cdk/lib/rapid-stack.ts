@@ -52,29 +52,43 @@ export class RapidStack extends cdk.Stack {
       serverAccessLogsPrefix: "DocumentBucket",
     });
 
-    // VPCの作成
-    const vpc = new ec2.Vpc(this, "RapidVpc", {
-      maxAzs: 2,
-      natGateways: 1,
-      subnetConfiguration: [
-        {
-          name: "public",
-          subnetType: ec2.SubnetType.PUBLIC,
-          cidrMask: 24,
-          mapPublicIpOnLaunch: false, // Disable auto-assignment of public IPs
-        },
-        {
-          name: "private",
-          subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS,
-          cidrMask: 24,
-        },
-        {
-          name: "isolated",
-          subnetType: ec2.SubnetType.PRIVATE_ISOLATED,
-          cidrMask: 28,
-        },
-      ],
-    });
+    // VPCの設定
+    let vpc: ec2.IVpc;
+    
+    // 既存のVPC IDが指定されている場合は、そのVPCを使用
+    if (props.parameters.vpcId) {
+      // 既存VPCのインポート
+      vpc = ec2.Vpc.fromLookup(this, "ImportedVpc", {
+        vpcId: props.parameters.vpcId
+      });
+      
+      // 既存VPCを使用する場合のログ出力
+      console.log(`Using existing VPC with ID: ${props.parameters.vpcId}`);
+    } else {
+      // 新しいVPCを作成
+      vpc = new ec2.Vpc(this, "RapidVpc", {
+        maxAzs: 2,
+        natGateways: 1,
+        subnetConfiguration: [
+          {
+            name: "public",
+            subnetType: ec2.SubnetType.PUBLIC,
+            cidrMask: 24,
+            mapPublicIpOnLaunch: false, // Disable auto-assignment of public IPs
+          },
+          {
+            name: "private",
+            subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS,
+            cidrMask: 24,
+          },
+          {
+            name: "isolated",
+            subnetType: ec2.SubnetType.PRIVATE_ISOLATED,
+            cidrMask: 28,
+          },
+        ],
+      });
+    }
 
     // Add VPC Flow Logs (AwsSolutions-VPC7)
     new ec2.FlowLog(this, "VpcFlowLog", {
